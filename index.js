@@ -75,8 +75,6 @@ class GameofWar {
     this.warPile = [] //for war pile
     this.gameSetup()
     this.round()
-    // this.p1Card = p1Card
-    // this.p2Card = p2Card
   }
 
   gameSetup() {
@@ -85,8 +83,12 @@ class GameofWar {
     
     this.playerOne.push(...cards.slice(0, cards.length / 2))
     this.playerTwo.push(...cards.slice(cards.length / 2))
+
+    console.log(`p1`,this.playerOne.length,`p2`,this.playerTwo.length)
   }
   
+
+
   round() {
     // put on a while loop until a player runs out of cards or a war triggers
     while (this.playerOne.length > 0 && this.playerTwo.length > 0) {
@@ -94,14 +96,14 @@ class GameofWar {
       let p2Card = this.playerTwo.pop()
 
       if (p1Card.score > p2Card.score) {
-        console.log(` ${p1Card.rank} of ${p1Card.suit} is greater than ${p2Card.rank} of ${p2Card.suit}, Player One wins the round with ${this.playerOne.length} cards in deck.`);
-        this.playerOne.unshift(p1Card, p2Card)
+        this.playerOne.unshift(p1Card, p2Card, ...this.warPile)
+        console.log(` ${p1Card.rank} of ${p1Card.suit} is greater than ${p2Card.rank} of ${p2Card.suit}, Player One wins! ${this.playerOne.length} to ${this.playerTwo.length} cards`);
         this.warPile.length = 0
       }
 
       else if (p2Card.score > p1Card.score) {
-        console.log(` ${p2Card.rank} of ${p2Card.suit} is greater than ${p1Card.rank} of ${p1Card.suit}, Player Two wins the round with ${this.playerTwo.length} cards in deck.`);
-        this.playerTwo.unshift(p1Card, p2Card)
+        this.playerTwo.unshift(p1Card, p2Card, ...this.warPile)
+        console.log(` ${p2Card.rank} of ${p2Card.suit} is greater than ${p1Card.rank} of ${p1Card.suit}, Player Two wins! ${this.playerOne.length} to ${this.playerTwo.length} cards`);
         this.warPile.length = 0
       }
       else {
@@ -110,9 +112,11 @@ class GameofWar {
       }
     }
     if (this.playerOne.length == 0) {
+      console.log(`p2`, this.playerTwo.length)
       console.log(`Player Two Wins the Game!!!`)
     }
     else if (this.playerTwo.length == 0) {
+      console.log(`p1`, this.playerOne.length)
       console.log(`Player One Wins the Game!!!`)
     }
   }
@@ -126,12 +130,12 @@ class GameofWar {
     }
     else if (this.playerOne.length > 4 && this.playerTwo.length < 4) {
       this.playerOne.unshift(...this.warPile)
-      this.playerOne.unshift(...this.playerTwo.splice(0, this.playerTwo.length))
+      this.playerOne.unshift(...this.playerTwo.splice(0))
       this.warPile.length = 0
     }
     else if (this.playerTwo.length > 4 && this.playerOne.length < 4) {
       this.playerTwo.unshift(...this.warPile)
-      this.playerTwo.unshift(...this.playerOne.splice(0, this.playerOne.length))
+      this.playerTwo.unshift(...this.playerOne.splice(0))
       this.warPile.length = 0
     }
     console.log(`The War Pile contians ${this.warPile.length} cards. Let the battle begin!`)
