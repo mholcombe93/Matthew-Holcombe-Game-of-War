@@ -31,7 +31,7 @@ class Deck {
   
   createDeck() {
     let cardSuits = ["Clubs", "Diamonds", "Hearts", "Spades"]
-    let cardRank = [2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King", "Ace"]
+    let cardRank = ["2", "3", "4", "5", "6","7", "8", "9", "10","Jack","Queen", "King","Ace"]
 
     for (let i = 0; i < cardSuits.length; i++) {
       for (let j = 0; j < cardRank.length; j++) {
@@ -54,52 +54,123 @@ class Deck {
     this.cards = result
     return result;
   };
+//   draw() {
+//     return this.cards.pop()
 
-  draw() {
-    return this.cards.pop()
-  }
+// }
 }
 
-let shuffledDeck = new Deck()
+// let shuffledDeck = new Deck()
 // shuffledDeck.shuffle()
 // console.log(shuffledDeck)
 
 
 
-// divide shuffleDeck into 2 equal subDeckOne and subDeckTwo and assign to players
+// divide shuffleDeck into 2 equal playerOne and playerTwo and assign to players
 
 class GameofWar {
   constructor() {
     this.playerOne = []
     this.playerTwo = []
-    this.pile = [] //for war pile
+    this.warPile = [] //for war pile
     this.gameSetup()
+    this.round()
+    // this.p1Card = p1Card
+    // this.p2Card = p2Card
   }
 
   gameSetup() {
     const deck = new Deck()
     let cards = deck.cards
-
+    
     this.playerOne.push(...cards.slice(0, cards.length / 2))
     this.playerTwo.push(...cards.slice(cards.length / 2))
   }
   
+  round() {
+    // put on a while loop until a player runs out of cards or a war triggers
+    while (this.playerOne.length > 0 && this.playerTwo.length > 0) {
+      let p1Card = this.playerOne.pop() // {rank, suit, score}
+      let p2Card = this.playerTwo.pop()
+
+      if (p1Card.score > p2Card.score) {
+        console.log(` ${p1Card.rank} of ${p1Card.suit} is greater than ${p2Card.rank} of ${p2Card.suit}, Player One wins the round with ${this.playerOne.length} cards in deck.`);
+        this.playerOne.unshift(p1Card, p2Card)
+        this.warPile.length = 0
+      }
+
+      else if (p2Card.score > p1Card.score) {
+        console.log(` ${p2Card.rank} of ${p2Card.suit} is greater than ${p1Card.rank} of ${p1Card.suit}, Player Two wins the round with ${this.playerTwo.length} cards in deck.`);
+        this.playerTwo.unshift(p1Card, p2Card)
+        this.warPile.length = 0
+      }
+      else {
+        console.log(`${p1Card.rank} equals ${p2Card.rank}! War has commenced!`)
+        this.declareWar(p1Card, p2Card)
+      }
+    }
+    if (this.playerOne.length == 0) {
+      console.log(`Player Two Wins the Game!!!`)
+    }
+    else if (this.playerTwo.length == 0) {
+      console.log(`Player One Wins the Game!!!`)
+    }
+  }
+
+  declareWar(c1, c2) {
+    this.warPile.push(c1, c2)
+    if (this.playerOne.length >= 4 && this.playerTwo.length >= 4) {
+      this.warPile.push(...this.playerOne.splice(this.playerOne.length - 3, 3))
+      this.warPile.push(...this.playerTwo.splice(this.playerTwo.length - 3, 3))
+      console.log(this.warPile)
+    }
+    else if (this.playerOne.length > 4 && this.playerTwo.length < 4) {
+      this.playerOne.unshift(...this.warPile)
+      this.playerOne.unshift(...this.playerTwo.splice(0, this.playerTwo.length))
+      this.warPile.length = 0
+    }
+    else if (this.playerTwo.length > 4 && this.playerOne.length < 4) {
+      this.playerTwo.unshift(...this.warPile)
+      this.playerTwo.unshift(...this.playerOne.splice(0, this.playerOne.length))
+      this.warPile.length = 0
+    }
+    console.log(`The War Pile contians ${this.warPile.length} cards. Let the battle begin!`)
+  }
 }
-  let game = new GameofWar
-console.log(game)
-console.log(GameofWar.playerOne)
+  let game = new GameofWar()
+
+  
+
+    //   if (p1Card.score > p2Card.score) {
+    //     console.log(` ${p1Card.rank} of ${p1Card.suit} is greater than ${p2Card.rank} of ${p2Card.suit}, Player One wins the War!`);
+    //     this.playerOne.unshift(this.warPile)
+    //   }
+    //   else {
+    //     console.log(` ${p2Card.rank} of ${p2Card.suit} is greater than ${p1Card.rank} of ${p1Card.suit}, Player Two wins the War!`);
+    //     this.playerOne.unshift(this.warPile)
+    //   }
+    
+    // }
+  
+  // else if (p1Card.score == p2Card.score && this.playerOne > 4 && this.playerTwo > 4) {
+
+  
+
+// console.log(game)
+// console.log(game.playerOne[0])
+
+
+
 
 //GAME
 
-// players compare spot (0) of the array (make an if/else of subDeckone(0) < , > , == )
+// players compare spot (0) of the array (make an if/else of playerOne[0] < , > , == )
   // "cardOne is <,> than CardTwo playerOne/Two wins the round"
     // both players SHIFT() the top card, then winner PUSH(x ,y) both cards
 
     //IN CASE OF WAR
 
-    // console.log the = with a note "its time for war"
-    // create a WarStack Array, Slice(1) the two equal cards into array
-    // both players SLICE(1-3) top 3 cards into WarStack
+    // both players SLICE(1-3) top 3 cards into warPile
     // compare top of decklist, 
     //create a console log of who wins war
     // winner PUSH(WarStack) to their list
