@@ -84,7 +84,7 @@ class GameofWar {
     this.playerOne.push(...cards.slice(0, cards.length / 2))
     this.playerTwo.push(...cards.slice(cards.length / 2))
 
-    console.log(`p1`,this.playerOne.length,`p2`,this.playerTwo.length)
+    console.log(`p1`, this.playerOne.length, `p2`, this.playerTwo.length)
   }
   
 
